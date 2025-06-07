@@ -1,4 +1,4 @@
-=== Section 2: Data Source ===
+Section 2: Data Source
 
 For our project, I chose the "California Housing Prices" dataset from Kaggle:
 https://www.kaggle.com/datasets/camnugent/california-housing-prices
@@ -9,14 +9,12 @@ What makes this dataset useful is how detailed and localized it is. It breaks ho
 
 ---
 
-=== Section 3: Data Cleaning (Rudy's Part) ===
+Section 3: Data Cleaning (Rudy's Part)
 
 As part of the data cleaning process, I took on two specific tasks to help prepare our dataset for analysis:
 
-1. Filling Missing Values in 'total_bedrooms'
-   I noticed that the 'total_bedrooms' column had some missing entries. Instead of dropping those rows (which would mean losing potentially useful data), I filled in the missing values using the median. The median is a good choice here because it helps avoid skewing the data, especially if there are outliers.
+1. Filling Missing Values in 'total_bedrooms'- I noticed that the 'total_bedrooms' column had some missing entries. Instead of dropping those rows (which would mean losing potentially useful data), I filled in the missing values using the median. The median is a good choice here because it helps avoid skewing the data, especially if there are outliers.
 
-2. Converting 'ocean_proximity' into Numerical Columns
-   The 'ocean_proximity' column is a categorical feature — meaning it contains words like "NEAR BAY" or "INLAND." To use this column in models later on, I applied one-hot encoding to turn each category into its own column with binary values (0 or 1). This way, we preserve the information without forcing the model to interpret the values as being ranked or ordered.
+2. Converting 'ocean_proximity' into Numerical Columns- The 'ocean_proximity' column is a categorical feature — meaning it contains words like "NEAR BAY" or "INLAND." To use this column in models later on, I applied one-hot encoding to turn each category into its own column with binary values (0 or 1). This way, we preserve the information without forcing the model to interpret the values as being ranked or ordered.
 
 These two steps helped clean and structure the data so that it's ready for analysis and modeling.
