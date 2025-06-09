@@ -18,3 +18,17 @@ As part of the data cleaning process, I took on two specific tasks to help prepa
 2. Converting 'ocean_proximity' into Numerical Columns- The 'ocean_proximity' column is a categorical feature — meaning it contains words like "NEAR BAY" or "INLAND." To use this column in models later on, I applied one-hot encoding to turn each category into its own column with binary values (0 or 1). This way, we preserve the information without forcing the model to interpret the values as being ranked or ordered.
 
 These two steps helped clean and structure the data so that it's ready for analysis and modeling.
+
+
+
+Section 4: Exploratory Data Analysis (EDA)
+
+
+(Greg)
+Heat Map: I chose the heat map to better visualise the housing location in California using the longitude (lon) and latitude (lat) values provided in the dataset and overlapping them with a png of the state. After converting the known lon & lat borders of California to degrees I was able to accurately line up the data. 
+The visual displays the most popular housing area to be around the Los Angeles area and the second to be within a triangle created by San Francisco, San Jose, and Sacramento. Just outside of these three major cities makes sense as residents would be able to easily drive to each.
+
+Scatter Plot: The scatter plot displays the median income for households within a block and the median value of the houses. As expected this displays a mostly linear trend where neighborhoods with wealthier residents have more expensive houses. Something interesting I noticed was the median house value seems to be capped at $500k in the data.
+
+Bar Plot: The bar plot compares the house values and the age of the houses. Houses that were just built seem to be the cheapest with a mean of around $150k. After the first year, the price jumps by around $75k and stays there for two to three years.
+            After three years, the housing value mostly stabilises around $200k. However, houses that are 52 years old have a very large jump in price to around 300k.
