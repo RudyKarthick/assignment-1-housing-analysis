@@ -33,7 +33,7 @@ plt.show()
 img = mpimg.imread("Map_of_California_outline.png")
 print("Loaded California map.")
 
-fig, ax = plt.subplots(figsize=(10,8))
+fig, ax = plt.subplots(figsize=(8,10))
 # Lon & Lat bounds: https://en.wikipedia.org/wiki/California 
 # Latitude	32°32′ N to 42° N = 32.533...° to 42°
 # Longitude	114°8′ W to 124°26′ W = -114.133...° to -124.433...°
@@ -69,6 +69,7 @@ plt.show()
 
 # -----Bar Plot-----
 mean = df.groupby('housing_median_age')['median_house_value'].mean()
+plt.figure(figsize=(15,10))
 mean.plot(kind='bar')
 plt.title("Mean House Value & Housing Median Age")
 plt.xlabel("Median House Age")
