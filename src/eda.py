@@ -173,3 +173,138 @@ plt.tight_layout()
 plt.savefig("eda_kmeans_geo_clusters.png")
 plt.show()
 print("Saved plot as 'eda_kmeans_geo_clusters.png'")
+
+
+
+# -------- Naive Bayes from Scratch --------
+print("Running Naive Bayes classification...")
+
+# For Naive Bayes, we bin continuous features
+df['income_bin'] = pd.cut(df['median_income'], bins=5, labels=False)
+df['age_bin'] = pd.cut(df['housing_median_age'], bins=5, labels=False)
+price_median = df['median_house_value'].median()
+df['price_class'] = (df['median_house_value'] > price_median).astype(int)
+
+# Prepare features
+features_nb = df[['income_bin', 'age_bin']].astype(int).values
+labels_nb = df['price_class'].values
+
+# Split
+split_index = int(0.8 * len(features_nb))
+X_train, y_train = features_nb[:split_index], labels_nb[:split_index]
+X_test, y_test = features_nb[split_index:], labels_nb[split_index:]
+
+# Calculate prior probabilities
+from collections import Counter
+
+priors = Counter(y_train)
+for cls in priors:
+    priors[cls] /= len(y_train)
+
+# Calculate likelihoods
+likelihoods = {}
+for cls in np.unique(y_train):
+    class_data = X_train[y_train == cls]
+    likelihoods[cls] = {}
+    for col in range(X_train.shape[1]):
+        values, counts = np.unique(class_data[:, col], return_counts=True)
+        total = len(class_data)
+        likelihoods[cls][col] = {v: c / total for v, c in zip(values, counts)}
+
+# Prediction function
+def predict(x):
+    posteriors = {}
+    for cls in priors:
+        prob = np.log(priors[cls])
+        for i, val in enumerate(x):
+            prob += np.log(likelihoods[cls][i].get(val, 1e-6))  # Laplace smoothing
+        posteriors[cls] = prob
+    return max(posteriors, key=posteriors.get)
+
+# Predict on test set
+y_pred = np.array([predict(x) for x in X_test])
+
+# Evaluate accuracy
+accuracy = np.mean(y_pred == y_test)
+print(f"Naive Bayes Accuracy: {accuracy * 100:.2f}%")
+
+# Confusion matrix
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Below Median", "Above Median"])
+disp.plot(cmap="Blues")
+plt.title("Confusion Matrix - Naive Bayes")
+plt.savefig("eda_naive_bayes_confusion_matrix.png")
+plt.show()
+print("Saved confusion matrix to 'eda_naive_bayes_confusion_matrix.png'")
+
+
+
+# ---- Logistic Regression from Scratch ----
+print("Running Logistic Regression: Predicting house value class based on income and age...")
+
+# Use the same binned features as in Naive Bayes
+X = df[['income_bin', 'age_bin']].astype(int).values
+y = df['price_class'].values
+
+# Train-test split (80/20)
+split_index = int(0.8 * len(X))
+X_train, y_train = X[:split_index], y[:split_index]
+X_test, y_test = X[split_index:], y[split_index:]
+
+# Add intercept term
+X_train_bias = np.c_[np.ones(X_train.shape[0]), X_train]
+X_test_bias = np.c_[np.ones(X_test.shape[0]), X_test]
+
+# Sigmoid function
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# Loss function (binary cross-entropy)
+def compute_loss(y, h):
+    epsilon = 1e-8
+    return -np.mean(y * np.log(h + epsilon) + (1 - y) * np.log(1 - h + epsilon))
+
+# Gradient Descent
+def train_logistic_regression(X, y, lr=0.1, epochs=1000):
+    theta = np.zeros(X.shape[1])
+    for i in range(epochs):
+        z = np.dot(X, theta)
+        h = sigmoid(z)
+        gradient = np.dot(X.T, (h - y)) / y.size
+        theta -= lr * gradient
+        
+        if i % 100 == 0:
+            loss = compute_loss(y, h)
+            print(f"Epoch {i}, Loss: {loss:.4f}")
+    return theta
+
+# Train the model
+theta = train_logistic_regression(X_train_bias, y_train)
+
+# Predict function
+def predict(X, theta, threshold=0.5):
+    return sigmoid(np.dot(X, theta)) >= threshold
+
+# Make predictions
+y_pred = predict(X_test_bias, theta).astype(int)
+
+# Evaluate accuracy
+accuracy = np.mean(y_pred == y_test)
+print(f"Logistic Regression Accuracy: {accuracy * 100:.2f}%")
+
+# Confusion Matrix
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Below Median", "Above Median"])
+disp.plot(cmap="Purples")
+plt.title("Confusion Matrix - Logistic Regression")
+plt.savefig("eda_logistic_regression_confusion_matrix.png")
+plt.show()
+print("Saved plot as 'eda_logistic_regression_confusion_matrix.png'")
+
+
+
+
