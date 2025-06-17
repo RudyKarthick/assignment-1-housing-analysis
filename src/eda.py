@@ -242,68 +242,68 @@ print("Saved confusion matrix to 'eda_naive_bayes_confusion_matrix.png'")
 
 
 # ---- Logistic Regression from Scratch ----
-print("Running Logistic Regression: Predicting house value class based on income and age...")
+# print("Running Logistic Regression: Predicting house value class based on income and age...")
 
-# Use the same binned features as in Naive Bayes
-X = df[['income_bin', 'age_bin']].astype(int).values
-y = df['price_class'].values
+# # Use the same binned features as in Naive Bayes
+# X = df[['income_bin', 'age_bin']].astype(int).values
+# y = df['price_class'].values
 
-# Train-test split (80/20)
-split_index = int(0.8 * len(X))
-X_train, y_train = X[:split_index], y[:split_index]
-X_test, y_test = X[split_index:], y[split_index:]
+# # Train-test split (80/20)
+# split_index = int(0.8 * len(X))
+# X_train, y_train = X[:split_index], y[:split_index]
+# X_test, y_test = X[split_index:], y[split_index:]
 
-# Add intercept term
-X_train_bias = np.c_[np.ones(X_train.shape[0]), X_train]
-X_test_bias = np.c_[np.ones(X_test.shape[0]), X_test]
+# # Add intercept term
+# X_train_bias = np.c_[np.ones(X_train.shape[0]), X_train]
+# X_test_bias = np.c_[np.ones(X_test.shape[0]), X_test]
 
-# Sigmoid function
-def sigmoid(z):
-    return 1 / (1 + np.exp(-z))
+# # Sigmoid function
+# def sigmoid(z):
+#     return 1 / (1 + np.exp(-z))
 
-# Loss function (binary cross-entropy)
-def compute_loss(y, h):
-    epsilon = 1e-8
-    return -np.mean(y * np.log(h + epsilon) + (1 - y) * np.log(1 - h + epsilon))
+# # Loss function (binary cross-entropy)
+# def compute_loss(y, h):
+#     epsilon = 1e-8
+#     return -np.mean(y * np.log(h + epsilon) + (1 - y) * np.log(1 - h + epsilon))
 
-# Gradient Descent
-def train_logistic_regression(X, y, lr=0.1, epochs=1000):
-    theta = np.zeros(X.shape[1])
-    for i in range(epochs):
-        z = np.dot(X, theta)
-        h = sigmoid(z)
-        gradient = np.dot(X.T, (h - y)) / y.size
-        theta -= lr * gradient
+# # Gradient Descent
+# def train_logistic_regression(X, y, lr=0.1, epochs=1000):
+#     theta = np.zeros(X.shape[1])
+#     for i in range(epochs):
+#         z = np.dot(X, theta)
+#         h = sigmoid(z)
+#         gradient = np.dot(X.T, (h - y)) / y.size
+#         theta -= lr * gradient
         
-        if i % 100 == 0:
-            loss = compute_loss(y, h)
-            print(f"Epoch {i}, Loss: {loss:.4f}")
-    return theta
+#         if i % 100 == 0:
+#             loss = compute_loss(y, h)
+#             print(f"Epoch {i}, Loss: {loss:.4f}")
+#     return theta
 
-# Train the model
-theta = train_logistic_regression(X_train_bias, y_train)
+# # Train the model
+# theta = train_logistic_regression(X_train_bias, y_train)
 
-# Predict function
-def predict(X, theta, threshold=0.5):
-    return sigmoid(np.dot(X, theta)) >= threshold
+# # Predict function
+# def predict(X, theta, threshold=0.5):
+#     return sigmoid(np.dot(X, theta)) >= threshold
 
-# Make predictions
-y_pred = predict(X_test_bias, theta).astype(int)
+# # Make predictions
+# y_pred = predict(X_test_bias, theta).astype(int)
 
-# Evaluate accuracy
-accuracy = np.mean(y_pred == y_test)
-print(f"Logistic Regression Accuracy: {accuracy * 100:.2f}%")
+# # Evaluate accuracy
+# accuracy = np.mean(y_pred == y_test)
+# print(f"Logistic Regression Accuracy: {accuracy * 100:.2f}%")
 
-# Confusion Matrix
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+# # Confusion Matrix
+# from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-cm = confusion_matrix(y_test, y_pred)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Below Median", "Above Median"])
-disp.plot(cmap="Purples")
-plt.title("Confusion Matrix - Logistic Regression")
-plt.savefig("eda_logistic_regression_confusion_matrix.png")
-plt.show()
-print("Saved plot as 'eda_logistic_regression_confusion_matrix.png'")
+# cm = confusion_matrix(y_test, y_pred)
+# disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Below Median", "Above Median"])
+# disp.plot(cmap="Purples")
+# plt.title("Confusion Matrix - Logistic Regression")
+# plt.savefig("eda_logistic_regression_confusion_matrix.png")
+# plt.show()
+# print("Saved plot as 'eda_logistic_regression_confusion_matrix.png'")
 
 
 
